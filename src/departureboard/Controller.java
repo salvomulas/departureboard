@@ -1,6 +1,7 @@
 package departureboard;
 import departureboard.model.*;
 import departureboard.event.*;
+import departureboard.view.*;
 
 /**
  * @author Salvatore Mulas
@@ -20,7 +21,7 @@ public class Controller {
 	 */
 	public Controller(Master model) {
 		this.model = model;
-		this.view = new View(model, this);
+		this.view = new View (this,model);
 	}
 	
 	/**
@@ -41,7 +42,7 @@ public class Controller {
 	 * Initializes the view
 	 */
 	public void viewInit(){
-		view.createAndShow();
+		view.generateView();
 	}
 	
 	public void setActiveTrain(int row) {

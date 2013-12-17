@@ -20,6 +20,10 @@ import javax.swing.JComponent;
 import javax.swing.Timer;
 
 public class LedPanel extends JComponent implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Timer TIMER = new Timer(500, this);
 	private final BufferedImage LED_OFF_OFF = createLedImage(0);
 	private final BufferedImage LED_ON_OFF = createLedImage(1);

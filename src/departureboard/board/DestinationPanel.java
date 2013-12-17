@@ -4,6 +4,10 @@ import departureboard.splitflap.GlobalTimer;
 import departureboard.splitflap.SplitFlap;
 
 public class DestinationPanel extends javax.swing.JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SplitFlap splitFlap1;
 	private SplitFlap splitFlap2;
 	private SplitFlap splitFlap3;

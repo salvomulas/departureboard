@@ -6,6 +6,10 @@ import departureboard.splitflap.GlobalTimer;
 import departureboard.splitflap.SplitFlap;
 
 public class TrackPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SplitFlap trackLeft;
 	private SplitFlap trackRight;
 	private int trackL;

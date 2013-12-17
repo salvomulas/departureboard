@@ -6,6 +6,10 @@ import departureboard.splitflap.GlobalTimer;
 import departureboard.splitflap.SplitFlap;
 
 public class HourPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SplitFlap hourLeft;
 	private SplitFlap hourRight;
 	private int hourL;

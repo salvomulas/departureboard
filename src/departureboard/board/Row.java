@@ -8,6 +8,10 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 
 public class Row extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private LedPanel ledPanel;
 	private JPanel ledSpacer;
 	private HourPanel hourPanel;

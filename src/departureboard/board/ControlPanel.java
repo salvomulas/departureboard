@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ControlPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton applyButton;
 	private JCheckBox blinkCheckBox;
 	private JTextField destinationTextField;
@@ -185,6 +189,10 @@ public class ControlPanel extends JPanel {
 
 	// ******************** Internal Classes **********************************
 	public class ControlEvent extends EventObject {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private final boolean BLINK;
 		private final String HOUR;
 		private final String MINUTE;

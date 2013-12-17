@@ -3,6 +3,10 @@ package departureboard.board;
 import javax.swing.JLabel;
 
 public class HeaderPanel extends javax.swing.JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel labelTime;
 	private JLabel labelDestination;
 	private JLabel labelTrack;

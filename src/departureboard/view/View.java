@@ -1,4 +1,4 @@
-package departureboard;
+package departureboard.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,12 +13,12 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,14 +38,23 @@ import javax.swing.table.TableRowSorter;
 
 import departureboard.board.DepartureBoard;
 import departureboard.model.*;
+import departureboard.*;
+
+/**
+ * @author Salvatore Mulas
+ * View class which draws the entire interface
+ */
 
 public class View extends JFrame {
-	/**
-	 * 
-	 */
+
+	// Providing a serial version to avoid warnings
 	private static final long serialVersionUID = 1L;
 	
-	// Define buttons
+	private final Master model;
+	private final Controller controller;
+	
+	private JMenuBar nav;
+	
 	private JToggleButton buttonDisplayPane;
 	private JButton buttonUndo;
 	private JButton buttonRedo;
@@ -54,7 +63,6 @@ public class View extends JFrame {
 	private JButton buttonTrainLeaves;
 	private JButton buttonFirstEntry;
 	
-	// Define text fields and text areas
 	private JTextField textFieldTime;
 	private JTextField textFieldDirection;
 	private JTextField textFieldTrainNr;
@@ -62,7 +70,6 @@ public class View extends JFrame {
 	private JTextArea textAreaVia;
 	private JTextField textFieldFilter;
 	
-	// Define labels
 	private JLabel labelTime;
 	private JLabel labelDirection;
 	private JLabel labelTrainNr;
@@ -70,50 +77,40 @@ public class View extends JFrame {
 	private JLabel labelVia;
 	private JLabel labelFilter;
 	
-	// Define table
 	private JTable table;
 	private JScrollPane jscrollpane;
-    TableRowSorter<TableModel> sorter;
+    private TableRowSorter <TableModel> sorter;
     
     // Define departure board
-    JDialog boardDialog;
-	DepartureBoard board;
-	Train previousFirstEntry;
-	int firstEntryIndex;
-	int lastEntryIndex;
+    private JDialog boardDialog;
+	private DepartureBoard board;
+	private Train previousFirstEntry;
+	private int firstEntryIndex;
+	private int lastEntryIndex;
 
-    // Define model and controller
-	private final Master model;
-	private final Controller controller;
-
-	public View(Master model, Controller controller) {
-		super("Departure Board!");
-		this.model = model;
+	/**
+	 * Class constructor
+	 * @param model Loads the given model reference
+	 * @param controller Loads the given controller reference
+	 */
+	public View(Controller controller, Master model) {
+		super("SMulas: DepartureBoard");
 		this.controller = controller;
+		this.model = model;
 	}
 
-	public void createAndShow() {	
-		initializeComponents();
-		JPanel contents = layoutComponents();
-		addEvents();
-
-		add(contents);
-		pack();
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // window will be closed using windowListener
-		setVisible(true);
-	}
-
-	private void initializeComponents() {
+	private void initElements() {
+		
 		// Initialize buttons
-		buttonDisplayPane = new JToggleButton(new ImageIcon("resources/on.png"));
-		buttonUndo = new JButton(new ImageIcon("resources/undo-icon.png"));
+		buttonDisplayPane = new JToggleButton(new ImageIcon("res/on.png"));
+		buttonUndo = new JButton(new ImageIcon("res/undo-icon.png"));
 		buttonUndo.setEnabled(false);
-		buttonRedo = new JButton(new ImageIcon("resources/redo-icon.png"));
+		buttonRedo = new JButton(new ImageIcon("res/redo-icon.png"));
 		buttonRedo.setEnabled(false);
-		buttonSave = new JButton(new ImageIcon("resources/save-icon.png"));
-		buttonTrainEnters = new JButton("Fährt ein");
+		buttonSave = new JButton(new ImageIcon("res/save-icon.png"));
+		buttonTrainEnters = new JButton("FÃ¤hrt ein");
 		buttonTrainEnters.setEnabled(false);
-		buttonTrainLeaves = new JButton("Fährt aus");
+		buttonTrainLeaves = new JButton("FÃ¤hrt aus");
 		buttonTrainLeaves.setEnabled(false);
 		buttonFirstEntry = new JButton("erster Eintrag auf Abfahrtstafel");
 		buttonFirstEntry.setEnabled(false);
@@ -136,7 +133,7 @@ public class View extends JFrame {
 		labelDirection = new JLabel("in Richtung");
 		labelTrainNr = new JLabel("Fahrt");
 		labelTrack = new JLabel("Gleis");
-		labelVia = new JLabel("über");
+		labelVia = new JLabel("Ãœber");
 		labelFilter = new JLabel("Suche: ");
 		
 		// Initialize table
@@ -152,12 +149,28 @@ public class View extends JFrame {
 		boardDialog = new JDialog(View.this, "Departure Board");
 		board = new DepartureBoard();
 		
+		// Initialize JMenuBar
+		nav = Navigation.createMenuBar();
+		
+	}
+	
+	public void generateView() {	
+		initElements();
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // window will be closed using windowListener
+		JPanel contents = layoutComponents();
+		addEvents();
+		add(contents);
+		pack();
 	}
 
 	private JPanel layoutComponents() {
 		// Create total panel
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
+		
+		// Create JMenuBar
+		setJMenuBar(nav);
 		
 		// Create toolbar
 		JToolBar toolbar = new JToolBar();
@@ -662,9 +675,9 @@ public class View extends JFrame {
 							hour = time.split(":")[0];
 							minute = time.split(":")[1];
 							direction = boardTrains.get(index).getDirection();
-							direction = direction.replace("ü", "ue");
-							direction = direction.replace("ä", "ae");
-							direction = direction.replace("ö", "oe");
+							direction = direction.replace("ï¿½", "ue");
+							direction = direction.replace("ï¿½", "ae");
+							direction = direction.replace("ï¿½", "oe");
 							track = boardTrains.get(index).getTrack();
 							info = boardTrains.get(index).getTrainNr() + ": " + boardTrains.get(index).getVia();
 						} else {

@@ -6,6 +6,10 @@ import departureboard.splitflap.GlobalTimer;
 import departureboard.splitflap.SplitFlap;
 
 public class MinutePanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SplitFlap minLeft;
 	private SplitFlap minRight;
 	private int minL;
