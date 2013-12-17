@@ -147,6 +147,7 @@ public class View extends JFrame {
 		
 		// Initialize departure board
 		boardDialog = new JDialog(View.this, "Departure Board");
+		boardDialog.setResizable(false);
 		board = new DepartureBoard();
 		
 		// Initialize JMenuBar
@@ -338,7 +339,7 @@ public class View extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				int answer = JOptionPane.showConfirmDialog(
 						View.this,
-						"Programm wirklich beenden?",
+						"Applikation wirklich beenden?",
 						"Confirm",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.PLAIN_MESSAGE
@@ -367,7 +368,7 @@ public class View extends JFrame {
 			    	} else {
 			    		rowIndexModel = -1;
 			    	}
-					System.out.println("Clicked on line " + rowIndexModel);
+					System.out.println("Focused dataset " + rowIndexModel);
 					controller.setActiveTrain(rowIndexModel);
 			    }
 			}			
@@ -619,13 +620,17 @@ public class View extends JFrame {
 				// Enable / disable undo / redo buttons
 				if(myModel.hasUndo()) {
 					buttonUndo.setEnabled(true);
+					Navigation.undoItem.setEnabled(true);
 				} else {
 					buttonUndo.setEnabled(false);
+					Navigation.undoItem.setEnabled(false);
 				}
 				if(myModel.hasRedo()) {
 					buttonRedo.setEnabled(true);
+					Navigation.redoItem.setEnabled(true);
 				} else {
 					buttonRedo.setEnabled(false);
+					Navigation.redoItem.setEnabled(false);
 				}
 
 				// Update only if another first entry has been set

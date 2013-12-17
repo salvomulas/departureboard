@@ -11,12 +11,15 @@ import javax.swing.JMenuBar;
 import javax.swing.KeyStroke;
 import javax.swing.ImageIcon;
 
+/**
+ * @author Salvatore Mulas
+ * Navigation class for drawing the JMenuBar - declared abstract with static attributes
+ */
 public abstract class Navigation {
 
 	private static JMenuBar menuBar;
-	private static JMenu menu, submenu;
-	private static JMenuItem exitItem, undoItem, redoItem;
-	private static JRadioButtonMenuItem rbMenuItem;
+	private static JMenu file, edit;
+	protected static JMenuItem exitItem, undoItem, redoItem;
 	private static JCheckBoxMenuItem cbMenuItem;
 	
 	private static ImageIcon undo, redo;
@@ -31,23 +34,25 @@ public abstract class Navigation {
 		menuBar = new JMenuBar();
 
 		// Builds the file menu.
-		menu = new JMenu("File");
-		menu.setMnemonic(KeyEvent.VK_A);
-		menuBar.add(menu);
+		file = new JMenu("File");
+		file.setMnemonic(KeyEvent.VK_A);
+		menuBar.add(file);
 		
 		exitItem = new JMenuItem("Exit", KeyEvent.VK_T);
-		menu.add(exitItem);
+		file.add(exitItem);
 
 		// Builds the edit menu
-		menu = new JMenu("Edit");
-		menu.setMnemonic(KeyEvent.VK_N);
-		menuBar.add(menu);
+		edit = new JMenu("Edit");
+		edit.setMnemonic(KeyEvent.VK_N);
+		menuBar.add(edit);
 		
 		undoItem = new JMenuItem("Undo", undo);
 		redoItem = new JMenuItem("Redo", redo);
+		undoItem.setEnabled(false);;
+		redoItem.setEnabled(false);
 
-		menu.add(undoItem);
-		menu.add(redoItem);
+		edit.add(undoItem);
+		edit.add(redoItem);
 		
 		return menuBar;
 		
