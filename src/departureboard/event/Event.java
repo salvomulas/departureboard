@@ -1,16 +1,19 @@
 package departureboard.event;
 import departureboard.model.*;
 
+/**
+ * Abstract class to define all events
+ * @author Salvatore Mulas
+ */
 public abstract class Event {
 	
 	Train train;
-	String time;
-	String direction;
-	String track;
-	String trainNr;
-	String via;
-	String status;
+	String time, direction, track, trainNr, via, status;
 	
+	/**
+	 * Class constructor
+	 * @param train Passes all attributes of the train to the instance
+	 */
 	public Event (Train train) {
 		this.train = train;
 		this.time = train.getTime();
@@ -20,6 +23,8 @@ public abstract class Event {
 		this.via = train.getVia();
 		this.status = train.getStatus();
 	}
+	
+	// Eclipse auto-generated getters and setters below this line
 	
 	public Train getTrain() {
 		return train;

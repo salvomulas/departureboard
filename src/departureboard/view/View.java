@@ -42,7 +42,7 @@ import departureboard.*;
 
 /**
  * @author Salvatore Mulas
- * View class which draws the entire interface
+ * View class which draws the entire user interface
  */
 
 public class View extends JFrame {
@@ -50,43 +50,46 @@ public class View extends JFrame {
 	// Providing a serial version to avoid warnings
 	private static final long serialVersionUID = 1L;
 	
+	// Model and controller
 	private final Master model;
 	private final Controller controller;
 	
+	// Menubar
 	private JMenuBar nav;
 	
-	private JToggleButton buttonDisplayPane;
-	private JButton buttonUndo;
-	private JButton buttonRedo;
-	private JButton buttonSave;
-	private JButton buttonTrainEnters;
-	private JButton buttonTrainLeaves;
-	private JButton buttonFirstEntry;
-	
-	private JTextField textFieldTime;
-	private JTextField textFieldDirection;
-	private JTextField textFieldTrainNr;
-	private JTextField textFieldTrack;
-	private JTextArea textAreaVia;
-	private JTextField textFieldFilter;
-	
-	private JLabel labelTime;
-	private JLabel labelDirection;
-	private JLabel labelTrainNr;
-	private JLabel labelTrack;
-	private JLabel labelVia;
-	private JLabel labelFilter;
-	
-	private JTable table;
-	private JScrollPane jscrollpane;
-    private TableRowSorter <TableModel> sorter;
-    
-    // Define departure board
+	// Parent elements
     private JDialog boardDialog;
 	private DepartureBoard board;
 	private Train previousFirstEntry;
 	private int firstEntryIndex;
 	private int lastEntryIndex;
+	
+	// Buttons
+	private JToggleButton btnToggleBoard;
+	private JButton btnArrival;
+	private JButton btnDeparture;
+	private JButton btnBegin;
+	
+	// Text fields and areas
+	private JTextField textFieldTime;
+	private JTextField textFieldDirection;
+	private JTextField textFieldTrainNr;
+	private JTextField textFieldTrack;
+	private JTextField textFieldFilter;
+	private JTextArea textAreaVia;
+	
+	// Labels
+	private JLabel labelTime;
+	private JLabel labelDirection;
+	private JLabel labelTrainNr;
+	private JLabel labelTrack;
+	private JLabel labelFilter;
+	private JLabel labelVia;
+	
+	// Table and scrollpane
+	private JTable table;
+	private JScrollPane jscrollpane;
+    private TableRowSorter <TableModel> sorter;
 
 	/**
 	 * Class constructor
@@ -99,23 +102,21 @@ public class View extends JFrame {
 		this.model = model;
 	}
 
+	/**
+	 * Initializes all elements
+	 */
 	private void initElements() {
 		
-		// Initialize buttons
-		buttonDisplayPane = new JToggleButton(new ImageIcon("res/on.png"));
-		buttonUndo = new JButton(new ImageIcon("res/undo-icon.png"));
-		buttonUndo.setEnabled(false);
-		buttonRedo = new JButton(new ImageIcon("res/redo-icon.png"));
-		buttonRedo.setEnabled(false);
-		buttonSave = new JButton(new ImageIcon("res/save-icon.png"));
-		buttonTrainEnters = new JButton("Fährt ein");
-		buttonTrainEnters.setEnabled(false);
-		buttonTrainLeaves = new JButton("Fährt aus");
-		buttonTrainLeaves.setEnabled(false);
-		buttonFirstEntry = new JButton("erster Eintrag auf Abfahrtstafel");
-		buttonFirstEntry.setEnabled(false);
+		// Buttons
+		btnToggleBoard = new JToggleButton(new ImageIcon("res/on.png"));
+		btnArrival = new JButton("Fährt ein");
+		btnArrival.setEnabled(false);
+		btnDeparture = new JButton("Fährt aus");
+		btnDeparture.setEnabled(false);
+		btnBegin = new JButton("erster Eintrag auf Abfahrtstafel");
+		btnBegin.setEnabled(false);
 		
-		// Initalize text fields and text areas
+		// Text elements
 		textFieldTime = new JTextField(20);
 		textFieldTime.setEnabled(false);
 		textFieldDirection = new JTextField(20);
@@ -128,7 +129,7 @@ public class View extends JFrame {
 		textAreaVia.setEnabled(false);
 		textFieldFilter = new JTextField(20);
 
-		// Initialize labels
+		// Labels
 		labelTime = new JLabel("Uhrzeit");
 		labelDirection = new JLabel("in Richtung");
 		labelTrainNr = new JLabel("Fahrt");
@@ -136,25 +137,29 @@ public class View extends JFrame {
 		labelVia = new JLabel("Über");
 		labelFilter = new JLabel("Suche: ");
 		
-		// Initialize table
+		// Table
 		final TableModel model = new TableAdapter();
 		table = new JTable(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// Table Sorter used to sort and filter table
+		
+		// Table Sort
 		sorter = new TableRowSorter<TableModel>(model);
 	    table.setRowSorter(sorter);	
 		jscrollpane = new JScrollPane(table);	
 		
-		// Initialize departure board
-		boardDialog = new JDialog(View.this, "Departure Board");
+		// Departure Board
+		boardDialog = new JDialog(View.this, "Graphical Departure Board");
 		boardDialog.setResizable(false);
 		board = new DepartureBoard();
 		
-		// Initialize JMenuBar
+		// JMenuBar
 		nav = Navigation.createMenuBar();
 		
 	}
 	
+	/**
+	 * Creates the window
+	 */
 	public void generateView() {	
 		initElements();
 		setVisible(true);
@@ -165,206 +170,198 @@ public class View extends JFrame {
 		pack();
 	}
 
+	/**
+	 * Provides all elements to the window
+	 * @return panel JPanel which is implemented into the JFrame
+	 */
 	private JPanel layoutComponents() {
-		// Create total panel
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		
-		// Create JMenuBar
 		setJMenuBar(nav);
 		
-		// Create toolbar
 		JToolBar toolbar = new JToolBar();
 
-		// Create split pane
 		JSplitPane splitpane = new JSplitPane();
 		splitpane.setContinuousLayout(true);
 		
-		// Create GridBag panel
 		JPanel gridbag = new JPanel();
 		gridbag.setLayout(new GridBagLayout());
 		gridbag.setMinimumSize(new Dimension(310, 300));
 		gridbag.setPreferredSize(new Dimension(310, 300));
-		GridBagConstraints c = new GridBagConstraints();
+		GridBagConstraints g = new GridBagConstraints();
 		
-		// Configure jscrollpane
 		jscrollpane.setMinimumSize(new Dimension(400, 300));
 		jscrollpane.setPreferredSize(new Dimension(400, 300));
 		
 		
-		// Add stuff to toolbar
-		toolbar.add(buttonDisplayPane);
-		toolbar.addSeparator(new Dimension(10, 40));
-		toolbar.add(buttonUndo);
-		toolbar.add(buttonRedo);
-		toolbar.addSeparator(new Dimension(10, 40));
-		toolbar.add(buttonSave);
+		toolbar.add(btnToggleBoard);
 		toolbar.addSeparator(new Dimension(10, 40));
 		toolbar.add(labelFilter);
 		toolbar.add(textFieldFilter);
 		
-		// Add stuff to split plane
 		splitpane.setLeftComponent(jscrollpane);
 		splitpane.setRightComponent(gridbag);
 		
-		// Add stuff to GridBag panel
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 0;
-		c.weighty = 0;		
-		c.anchor = GridBagConstraints.WEST;
-		gridbag.add(labelTime, c);
+		// Draw the entire GridBag
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 0;
+		g.gridy = 0;
+		g.weightx = 0;
+		g.weighty = 0;		
+		g.anchor = GridBagConstraints.WEST;
+		gridbag.add(labelTime, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 1;
-		c.gridy = 0;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 0;		
-		gridbag.add(textFieldTime, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 1;
+		g.gridy = 0;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 2;
+		g.weightx = 1;
+		g.weighty = 0;		
+		gridbag.add(textFieldTime, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 0;
-		c.gridy = 1;
-		c.weightx = 0;
-		c.weighty = 0;		
-		c.anchor = GridBagConstraints.WEST;
-		gridbag.add(labelDirection, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 0;
+		g.gridy = 1;
+		g.weightx = 0;
+		g.weighty = 0;		
+		g.anchor = GridBagConstraints.WEST;
+		gridbag.add(labelDirection, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 1;
-		c.gridy = 1;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 0;		
-		gridbag.add(textFieldDirection, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 1;
+		g.gridy = 1;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 2;
+		g.weightx = 1;
+		g.weighty = 0;		
+		gridbag.add(textFieldDirection, g);
 
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 0;
-		c.gridy = 2;
-		c.weightx = 0;
-		c.weighty = 0;		
-		c.anchor = GridBagConstraints.WEST;
-		gridbag.add(labelTrainNr, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 0;
+		g.gridy = 2;
+		g.weightx = 0;
+		g.weighty = 0;		
+		g.anchor = GridBagConstraints.WEST;
+		gridbag.add(labelTrainNr, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 1;
-		c.gridy = 2;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 0;		
-		gridbag.add(textFieldTrainNr, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 1;
+		g.gridy = 2;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 2;
+		g.weightx = 1;
+		g.weighty = 0;		
+		gridbag.add(textFieldTrainNr, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 0;
-		c.gridy = 3;
-		c.weightx = 0;
-		c.weighty = 0;		
-		c.anchor = GridBagConstraints.WEST;
-		gridbag.add(labelTrack, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 0;
+		g.gridy = 3;
+		g.weightx = 0;
+		g.weighty = 0;		
+		g.anchor = GridBagConstraints.WEST;
+		gridbag.add(labelTrack, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 1;
-		c.gridy = 3;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 0;		
-		gridbag.add(textFieldTrack, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 1;
+		g.gridy = 3;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 2;
+		g.weightx = 1;
+		g.weighty = 0;		
+		gridbag.add(textFieldTrack, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 0;
-		c.gridy = 4;
-		c.anchor = GridBagConstraints.WEST;
-		c.weightx = 0;
-		c.weighty = 1;		
-		gridbag.add(labelVia, c);
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 0;
+		g.gridy = 4;
+		g.anchor = GridBagConstraints.WEST;
+		g.weightx = 0;
+		g.weighty = 1;		
+		gridbag.add(labelVia, g);
 		
-		c.fill = GridBagConstraints.BOTH; 
-		c.gridx = 1;
-		c.gridy = 4;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 1;
+		g.fill = GridBagConstraints.BOTH; 
+		g.gridx = 1;
+		g.gridy = 4;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 2;
+		g.weightx = 1;
+		g.weighty = 1;
 		textAreaVia.setLineWrap(true);
 		textAreaVia.setWrapStyleWord(true);
-		gridbag.add(textAreaVia, c);
+		gridbag.add(textAreaVia, g);
 		
-		c.fill = GridBagConstraints.NONE; 
-		c.gridx = 0;
-		c.gridy = 5;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.weighty = 0;
-		gridbag.add(buttonTrainEnters, c);
+		g.fill = GridBagConstraints.NONE; 
+		g.gridx = 0;
+		g.gridy = 5;
+		g.anchor = GridBagConstraints.WEST;
+		g.gridwidth = 1;
+		g.weightx = 1;
+		g.weighty = 0;
+		gridbag.add(btnArrival, g);
 		
-		c.fill = GridBagConstraints.NONE; 
-		c.gridx = 2;
-		c.gridy = 5;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.weighty = 0;
-		gridbag.add(buttonTrainLeaves, c);
+		g.fill = GridBagConstraints.NONE; 
+		g.gridx = 2;
+		g.gridy = 5;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 1;
+		g.weightx = 1;
+		g.weighty = 0;
+		gridbag.add(btnDeparture, g);
 		
-		c.fill = GridBagConstraints.HORIZONTAL; 
-		c.gridx = 0;
-		c.gridy = 6;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = 3;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.ipadx = 60;
-		gridbag.add(buttonFirstEntry, c);		
+		g.fill = GridBagConstraints.HORIZONTAL; 
+		g.gridx = 0;
+		g.gridy = 6;
+		g.anchor = GridBagConstraints.EAST;
+		g.gridwidth = 3;
+		g.weightx = 1;
+		g.weighty = 0;
+		g.ipadx = 60;
+		gridbag.add(btnBegin, g);		
 		
-		// Add departure board
 		boardDialog.add(board);
 		boardDialog.pack();
 		
-		panel.add(toolbar, BorderLayout.NORTH);
+		panel.add(toolbar, BorderLayout.SOUTH);
 		panel.add(splitpane, BorderLayout.CENTER);
 		
 		return panel;
 	}
 
+	/**
+	 * Adding all events and actions to the GUI elements
+	 */
 	private void addEvents() {
+		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int answer = JOptionPane.showConfirmDialog(
-						View.this,
-						"Applikation wirklich beenden?",
-						"Confirm",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.PLAIN_MESSAGE
-				);
+				int answer = JOptionPane.showConfirmDialog(View.this,"Applikation wirklich beenden?","Beenden",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE);
 				if (answer == JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
 			}
 		});
+			
 		boardDialog.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {	
-				buttonDisplayPane.setSelected(false);
+				btnToggleBoard.setSelected(false);
+				Navigation.dBoard.setSelected(false);
 			}
 		});
+		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 			    boolean isAdjusting = e.getValueIsAdjusting();
 			    if(isAdjusting == false) {
-			    	int rowIndexView = lsm.getMinSelectionIndex(); // get row index in the current view
+			    	int rowIndexView = lsm.getMinSelectionIndex();
 			    	int rowIndexModel;
 			    	if (rowIndexView != -1) {
-			    		rowIndexModel = table.convertRowIndexToModel(rowIndexView); // convert to row index of model
+			    		rowIndexModel = table.convertRowIndexToModel(rowIndexView);
 			    	} else {
 			    		rowIndexModel = -1;
 			    	}
@@ -373,6 +370,7 @@ public class View extends JFrame {
 			    }
 			}			
 		});
+		
 		textFieldTime.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {}
@@ -385,6 +383,7 @@ public class View extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
+		
 		textFieldDirection.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {}
@@ -397,6 +396,7 @@ public class View extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
+		
 		textFieldTrainNr.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {}
@@ -409,6 +409,7 @@ public class View extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
+		
 		textFieldTrack.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {}
@@ -421,6 +422,7 @@ public class View extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
+		
 		textAreaVia.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {}
@@ -433,6 +435,7 @@ public class View extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
+		
 		textFieldFilter.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {}
@@ -440,17 +443,15 @@ public class View extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				String text = textFieldFilter.getText();
-				System.out.println("Typed " + textFieldFilter.getText());
-				// Set table filter to null if text field is empty
+				System.out.println("Textinput " + textFieldFilter.getText());
 				if (text.length() == 0) {
 					sorter.setRowFilter(null);
-				// Set table filter to search string of text field
 			    } else {
 			    	try {
 			    		sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-			    		System.out.println("Setting filter to " + text);
+			    		System.out.println("Filter has been applied to " + text);
 			    	} catch (PatternSyntaxException pse) {
-			    		System.err.println("Bad regex pattern");
+			    		System.err.println("Regex error");
 			    	}
 			    }			
 			}
@@ -458,94 +459,119 @@ public class View extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
-		buttonDisplayPane.addActionListener(new ActionListener() {
+		
+		btnToggleBoard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(boardDialog.isVisible() == false) {
 					boardDialog.setVisible(true);
+					Navigation.dBoard.setSelected(true);
 				} else {
 					boardDialog.setVisible(false);
+					Navigation.dBoard.setSelected(false);
 				}
 			}
 		});
-		buttonUndo.addActionListener(new ActionListener() {
+		
+		Navigation.dBoard.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(boardDialog.isVisible() == false) {
+					boardDialog.setVisible(true);
+					btnToggleBoard.setSelected(true);
+					Navigation.dBoard.setSelected(true);
+				} else {
+					boardDialog.setVisible(false);
+					btnToggleBoard.setSelected(false);
+					Navigation.dBoard.setSelected(false);
+				}
+			}
+		});
+		
+		Navigation.exitItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int answer = JOptionPane.showConfirmDialog(View.this,"Applikation wirklich beenden?","Beenden",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE);
+				if (answer == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
+		
+		Navigation.undoItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.undo();
 			}
 		});
-		buttonRedo.addActionListener(new ActionListener() {
+		Navigation.redoItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.redo();
 			}
 		});
-		buttonSave.addActionListener(new ActionListener() {
+		Navigation.saveItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.saveData();
 			}			
 		});
-		buttonTrainEnters.addActionListener(new ActionListener() {
+		btnArrival.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller.setStatus("im Bahnhof");
+				controller.setStatus("angekommen");
 			}			
 		});
-		buttonTrainLeaves.addActionListener(new ActionListener() {
+		btnDeparture.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.setStatus("abgefahren");
 			}			
 		});
-		buttonFirstEntry.addActionListener(new ActionListener() {
+		btnBegin.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.setFirstEntry();
 			}
 		});
 		
-		// Add Observer for model
+		// Adding the Observer
 		model.addObserver(new Observer() {
 			@Override
 			public void update(Observable m) {
-				// Get model
+
 				Master myModel = (Master) m;
-				// Get index of active item
+				
+				// Active item
 				ArrayList<Train> allTrains = model.getAllTrains();				
 				int activeIndex = allTrains.indexOf(model.getActiveTrain());
 				System.out.println("Active index: " + activeIndex);
-				// Get table staff
+
 				TableAdapter ta = (TableAdapter) table.getModel();
 				int rowIndex;
 				if(activeIndex != -1) {
 					rowIndex = table.convertRowIndexToView(activeIndex);
-					// Reset the table view filter, if the selected row is not included in the displayed rows (mainly used for undo / redo)
 					if(rowIndex == -1) {
 						sorter.setRowFilter(null);
 						rowIndex = table.convertRowIndexToView(activeIndex);
 					}
 					int colIndex = table.getSelectedColumn();					
-					table.changeSelection(rowIndex, colIndex, false, false); // change selection to active row and col
+					table.changeSelection(rowIndex, colIndex, false, false);
 				} else {
 					rowIndex = 0;
 					table.clearSelection();
 				}
-				System.out.println("Selected: " + rowIndex);
-				System.out.println("MODEL CHANGED!");
-				// Get staff for departure board
+				System.out.println("Selection: " + rowIndex);
+				System.out.println("Applied!");
 				boolean updateDepartureBoard = false;		
 				
-				
-				// Update text fields and table only when values has changed!
 				if(myModel.getActiveTrain() == null) {
 					textFieldTime.setEnabled(false);
 					textFieldTime.setText("");
 				} else if(textFieldTime.getText() != myModel.getActiveTrain().getTime()) {
 					textFieldTime.setEnabled(true);
 					textFieldTime.setText(myModel.getActiveTrain().getTime());
-					ta.fireTableCellUpdated(rowIndex, 0); // update table if value has changed'
-					// Update departure board only if these lines are visible on it
+					ta.fireTableCellUpdated(rowIndex, 0);
 					if(activeIndex >= firstEntryIndex && activeIndex <= lastEntryIndex) {
 						updateDepartureBoard = true;
 					}
@@ -556,8 +582,7 @@ public class View extends JFrame {
 				} else if(textFieldTrainNr.getText() != myModel.getActiveTrain().getTrainNr()) {
 					textFieldTrainNr.setEnabled(true);
 					textFieldTrainNr.setText(myModel.getActiveTrain().getTrainNr());
-					ta.fireTableCellUpdated(rowIndex, 1); // update table if value has changed
-					// Update departure board only if these lines are visible on it
+					ta.fireTableCellUpdated(rowIndex, 1);
 					if(activeIndex >= firstEntryIndex && activeIndex <= lastEntryIndex) {
 						updateDepartureBoard = true;
 					}					
@@ -568,8 +593,7 @@ public class View extends JFrame {
 				} else if(textFieldDirection.getText() != myModel.getActiveTrain().getDirection()) {
 					textFieldDirection.setEnabled(true);
 					textFieldDirection.setText(myModel.getActiveTrain().getDirection());
-					ta.fireTableCellUpdated(rowIndex, 2); // update table if value has changed
-					// Update departure board only if these lines are visible on it
+					ta.fireTableCellUpdated(rowIndex, 2);
 					if(activeIndex >= firstEntryIndex && activeIndex <= lastEntryIndex) {
 						updateDepartureBoard = true;
 					}				
@@ -580,7 +604,6 @@ public class View extends JFrame {
 				} else if(textFieldTrack.getText() != myModel.getActiveTrain().getTrack()) {
 					textFieldTrack.setEnabled(true);
 					textFieldTrack.setText(myModel.getActiveTrain().getTrack());
-					// Update departure board only if these lines are visible on it
 					if(activeIndex >= firstEntryIndex && activeIndex <= lastEntryIndex) {
 						updateDepartureBoard = true;
 					}				
@@ -591,70 +614,57 @@ public class View extends JFrame {
 				} else if(textAreaVia.getText() != myModel.getActiveTrain().getVia()) {
 					textAreaVia.setEnabled(true);
 					textAreaVia.setText(myModel.getActiveTrain().getVia());
-					// Update departure board only if these lines are visible on it
 					if(activeIndex >= firstEntryIndex && activeIndex <= lastEntryIndex) {
 						updateDepartureBoard = true;
 					}					
 				}
-				// Enable / disable train buttons
 				if(myModel.getActiveTrain() == null) {
-					buttonTrainEnters.setEnabled(false);
-					buttonTrainLeaves.setEnabled(false);
-					buttonFirstEntry.setEnabled(false);
-				} else if(myModel.getActiveTrain().getStatus().equals("im Bahnhof")) {
-					buttonTrainEnters.setEnabled(false);
-					buttonTrainLeaves.setEnabled(true);
-					buttonFirstEntry.setEnabled(true);					
+					btnArrival.setEnabled(false);
+					btnDeparture.setEnabled(false);
+					btnBegin.setEnabled(false);
+				} else if(myModel.getActiveTrain().getStatus().equals("angekommen")) {
+					btnArrival.setEnabled(false);
+					btnDeparture.setEnabled(true);
+					btnBegin.setEnabled(true);					
 					ta.fireTableCellUpdated(rowIndex, 3); // update table if value has changed
 				} else if (myModel.getActiveTrain().getStatus().equals("abgefahren")) {
-					buttonTrainEnters.setEnabled(false);
-					buttonTrainLeaves.setEnabled(false);
-					buttonFirstEntry.setEnabled(true);					
+					btnArrival.setEnabled(false);
+					btnDeparture.setEnabled(false);
+					btnBegin.setEnabled(true);					
 					ta.fireTableCellUpdated(rowIndex, 3); // update table if value has changed
 					
 				} else {
-					buttonTrainEnters.setEnabled(true);
-					buttonTrainLeaves.setEnabled(true);
-					buttonFirstEntry.setEnabled(true);
+					btnArrival.setEnabled(true);
+					btnDeparture.setEnabled(true);
+					btnBegin.setEnabled(true);
 				}
-				// Enable / disable undo / redo buttons
+
 				if(myModel.hasUndo()) {
-					buttonUndo.setEnabled(true);
 					Navigation.undoItem.setEnabled(true);
 				} else {
-					buttonUndo.setEnabled(false);
 					Navigation.undoItem.setEnabled(false);
 				}
 				if(myModel.hasRedo()) {
-					buttonRedo.setEnabled(true);
 					Navigation.redoItem.setEnabled(true);
 				} else {
-					buttonRedo.setEnabled(false);
 					Navigation.redoItem.setEnabled(false);
 				}
 
-				// Update only if another first entry has been set
 				if(model.getFirstEntry() != previousFirstEntry) {
 					updateDepartureBoard = true;
 				}
 				
-				// Update departure board if needed
-				// IDEA:
-				// The departure board is only updated if first entry has changed or 
-				// if any attributes of the displayed trains on the departure board have changed.
-				// If a line which is not displayed on the departure board has changed, do not update the departure board 
+				// Force update of the board if necessary
 				if(activeIndex != -1 && updateDepartureBoard == true) {
 					System.out.println("Updating departure board!");
 					previousFirstEntry = model.getFirstEntry();
 					int rowCount = 0;
 					int activeFirstIndex = allTrains.indexOf(model.getFirstEntry());
 					ArrayList<Train> boardTrains = new ArrayList<Train>();
-					// Get 5 valid trains for departure board (not leaved yet)
 					for(int index = activeFirstIndex; index < allTrains.size(); index++) {
 						String status = allTrains.get(index).getStatus();
 						if(!status.equals("abgefahren")) {
 							boardTrains.add(allTrains.get(index));
-							// Leave loop after 5 lines
 							if(rowCount < 4) {
 								rowCount++;							
 							} else {
@@ -662,10 +672,8 @@ public class View extends JFrame {
 							}
 						}
 					}
-					// Save first and last entry index for later (to update only if needed)
 					firstEntryIndex = allTrains.indexOf(model.getFirstEntry());
 					lastEntryIndex = allTrains.indexOf(boardTrains.get(boardTrains.size() - 1));
-					// Add trains to departure board
 					for(int index = 0; index < 5; index++) {
 						String status;
 						String hour;
@@ -674,15 +682,15 @@ public class View extends JFrame {
 						String track;
 						String info;
 						if(index < boardTrains.size()) {
-							// Get train status
 							status = boardTrains.get(index).getStatus();
 							String time = boardTrains.get(index).getTime();
 							hour = time.split(":")[0];
 							minute = time.split(":")[1];
 							direction = boardTrains.get(index).getDirection();
-							direction = direction.replace("�", "ue");
-							direction = direction.replace("�", "ae");
-							direction = direction.replace("�", "oe");
+							// Makes sure that ä,ö,ü get replaced to avoid infinite loop on the board
+							direction = direction.replace("ü", "ue");
+							direction = direction.replace("ä", "ae");
+							direction = direction.replace("ö", "oe");
 							track = boardTrains.get(index).getTrack();
 							info = boardTrains.get(index).getTrainNr() + ": " + boardTrains.get(index).getVia();
 						} else {
@@ -693,8 +701,7 @@ public class View extends JFrame {
 							track = "";
 							info = "";
 						}
-						// Set line on departure board
-						if(status.equals("im Bahnhof")) {
+						if(status.equals("angekommen")) {
 							board.getRows().get(index).setBlinking(true);
 						} else {
 							board.getRows().get(index).setBlinking(false);
@@ -712,9 +719,7 @@ public class View extends JFrame {
 	}		
 
 	private class TableAdapter extends AbstractTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		@Override

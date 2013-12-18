@@ -1,6 +1,6 @@
 Uhrzeit;Fahrt;in Richtung;�ber;Gleis;
-00:00;IC;Zürich HB;Olten  00:00 - Aarau  00:08 - Zürich HB  00:33;;
-00:04;IC 746;Hello;Olten  00:04 - Bern  00:31;;
+00:00;IC 4;Zürich HB;Olten  00:00 - Aarau  00:08 - Zürich HB  00:33;;
+00:04;IC 7462;Hello;Olten  00:04 - Bern  00:31;;
 00:33;EC 158;Basel SBB;Olten  00:33 - Liestal  00:48 - Basel SBB  00:59;10;
 00:33;IC 849;Zürich HB;Olten  00:33 - Zürich HB  01:04;;
 00:35;IC 800;Bern;Olten  00:35 - Bern  01:02;;

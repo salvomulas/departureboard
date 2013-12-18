@@ -5,7 +5,7 @@ import departureboard.view.*;
 
 /**
  * @author Salvatore Mulas
- *
+ * Default controller for the application
  */
 public class Controller {
 	
@@ -36,6 +36,7 @@ public class Controller {
 	 */
 	public void saveData() {
 		model.exportCsvFile("res/olten.txt");
+		System.out.println("Gespeichert!");
 	}
 
 	/**
@@ -44,6 +45,8 @@ public class Controller {
 	public void viewInit(){
 		view.generateView();
 	}
+	
+	// Setter methods for all attributes below this line
 	
 	public void setActiveTrain(int row) {
 		if(row != -1) {
@@ -93,12 +96,13 @@ public class Controller {
 		model.setActiveTrainStatus(status);
 	}
 	
+	/**
+	 * Method to implement the undo function
+	 * Reads the last undo and adds a new record to the opposite
+	 */
 	public void undo() {
-		// Get last undo event
 		Undo undo = model.getLastUndo();
-		// add redo event
 		model.addRedo(new Redo(undo.getTrain()));		
-		// Save information from undo to model
 		model.setActiveTrain(undo.getTrain());
 		model.setActiveTrainTime(undo.getTime());
 		model.setActiveTrainTrainNr(undo.getTrainNr());
@@ -108,12 +112,13 @@ public class Controller {
 		model.setActiveTrainStatus(undo.getStatus());
 	}
 	
+	/**
+	 * Method to implement the redo function
+	 * Reads the last redo and adds a new record to the opposite
+	 */
 	public void redo() {
-		// Get last redo event
 		Redo redo = model.getLastRedo();
-		// add undo event
 		model.addUndo(new Undo(redo.getTrain()));
-		// Save information from redo to model
 		model.setActiveTrain(redo.getTrain());
 		model.setActiveTrainTime(redo.getTime());
 		model.setActiveTrainTrainNr(redo.getTrainNr());
